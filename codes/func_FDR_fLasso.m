@@ -1,4 +1,4 @@
-function [x, z1,z2, its, dk, ek, Dk] = func_FDR_fLasso(para, proxR1,proxR2,projV,gradF, xsol,zsol,vsol)
+function [x, z1,z2, its, dk, ek, Dk, tk] = func_FDR_fLasso(para, proxR1,proxR2,projV,gradF, xsol,zsol,vsol)
 
 
 fprintf(sprintf('performing FDR...\n'));
@@ -20,10 +20,13 @@ tau2 = mu2*gamma;
 z1 = zeros(n, 1);
 z2 = z1;
 
+v = [z1-z1; z2-z2];
+
 x = projV(z1, z2);
 
 dk = zeros(maxits, 1);
 ek = zeros(maxits, 1);
+tk = zeros(maxits, 1);
 
 b = para.b;
 A = para.A;
@@ -40,15 +43,19 @@ while(its<maxits)
     z1_old = z1;
     z2_old = z2;
     
+    v_old = v;
+    
     grad = gamma* gradF(x);
     
-    % oft-threshold
+    % soft-threshold
     u1 = proxR1(2*x-z1-grad, tau1);
     z1 = z1 + ( u1 - x );
     
     % TV
     u2 = proxR2(2*x-z2-grad, tau2);
     z2 = z2 + ( u2 - x );
+    
+    v = [z1-z1_old; z2-z2_old];
     
     % projection
     x = projV(z1, z2);
@@ -59,6 +66,8 @@ while(its<maxits)
     
     ek(its) = res;
     dk(its) = norm([z1,z2]-zsol, 'fro');
+    
+    tk(its) = ( (v')/norm(v) ) * ( (v_old) /norm(v_old) );
     
     % Bregman divergence
     % u_V = projV(u1, u2);
@@ -74,6 +83,7 @@ fprintf('\n');
 
 dk = dk(1:its);
 ek = ek(1:its);
+tk = tk(1:its);
 Dk = Dk(1:its);
 
 % disp(norm(u1-xsol))

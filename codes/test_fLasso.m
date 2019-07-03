@@ -47,7 +47,7 @@ gamma = para.c_gamma*para.beta;
 zsol = [z1sol,z2sol];
 vsol = [xsol-z1sol; xsol-z2sol] /gamma;
 
-[x,z1,z2, its, dk, ek, fk] = func_FDR_fLasso(para, proxR1,proxR2,projV,gradF, xsol,zsol,vsol);
+[x,z1,z2, its, dk, ek, fk, tk] = func_FDR_fLasso(para, proxR1,proxR2,projV,gradF, xsol,zsol,vsol);
 %% Rate estimation                         
 tol = 1e-10;
 Id = eye(2*n);
