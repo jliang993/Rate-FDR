@@ -3,7 +3,7 @@
 
 Matlab code to reproduce the results of the paper
 
-Convergence Rates of Forward--Douglas--Rachford Splitting Method
+[Convergence Rates of Forward--Douglas--Rachford Splitting Method](https://jliang993.github.io/assets/files/journal/rate-fdr.pdf)
 
 Cesare Molinari, Jingwei Liang, Jalal Fadili,  2018
 
